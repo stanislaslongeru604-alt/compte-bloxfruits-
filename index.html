@@ -12,14 +12,14 @@
     <header>
       <h1>🏴‍☠️ Blox Fruits Tracker</h1>
       <nav class="tab-navigation">
-        <button class="tab-btn active" data-tab="tab-dashboard">📊 Mes Comptes</button>
-        <button class="tab-btn" data-tab="tab-catalog">🍇 Tous les Fruits (Global)</button>
+        <button class="tab-btn active" data-tab="tab-dashboard">📊 Dashboard Comptes</button>
+        <button class="tab-btn" data-tab="tab-catalog">🍇 Catalogue & Stock Total</button>
       </nav>
     </header>
 
     <main id="tab-dashboard" class="tab-content active">
       <div class="account-selector-container">
-        <label for="account-select">👤 Sélectionner un compte :</label>
+        <label for="account-select">👤 Compte actif :</label>
         <select id="account-select"></select>
       </div>
 
@@ -48,31 +48,29 @@
         <div class="card fruits-count">
           <div class="card-icon">🧺</div>
           <div class="card-info">
-            <h3>Fruits (Ce compte)</h3>
+            <h3>Total Fruits (Ce compte)</h3>
             <p id="player-fruit-count">0</p>
           </div>
         </div>
       </section>
 
       <section class="fruits-section">
-        <h2>Inventaire du compte actif</h2>
+        <h2>Inventaire du compte sélectionné</h2>
         <div class="fruits-grid" id="my-fruits-container"></div>
       </section>
     </main>
 
     <main id="tab-catalog" class="tab-content">
-      <div class="catalog-header">
-        <h2>Catalogue & Stock Global</h2>
-        <p class="subtitle">Affiche la quantité cumulée de fruits sur **tous** tes comptes confondus.</p>
-      </div>
-
-      <div class="filter-bar">
-        <button class="filter-btn active" data-rarity="all">Toutes</button>
-        <button class="filter-btn mythic" data-rarity="Mythique">Mythique</button>
-        <button class="filter-btn legendary" data-rarity="Légendaire">Légendaire</button>
-        <button class="filter-btn rare" data-rarity="Rare">Rare</button>
-        <button class="filter-btn uncommon" data-rarity="Peu commun">Peu commun</button>
-        <button class="filter-btn common" data-rarity="Commun">Commun</button>
+      
+      <div class="filter-container">
+        <div class="filter-group">
+          <button class="filter-btn active" data-rarity="all">Toutes <span class="count-badge" id="count-all">0</span></button>
+          <button class="filter-btn common" data-rarity="Commun">Commun <span class="count-badge" id="count-commun">0</span></button>
+          <button class="filter-btn uncommon" data-rarity="Peu commun">Peu commun <span class="count-badge" id="count-peu-commun">0</span></button>
+          <button class="filter-btn rare" data-rarity="Rare">Rare <span class="count-badge" id="count-rare">0</span></button>
+          <button class="filter-btn legendary" data-rarity="Légendaire">Légendaire <span class="count-badge" id="count-legendaire">0</span></button>
+          <button class="filter-btn mythic" data-rarity="Mythique">Mythique <span class="count-badge" id="count-mythique">0</span></button>
+        </div>
       </div>
 
       <div class="fruits-grid" id="catalog-container"></div>
