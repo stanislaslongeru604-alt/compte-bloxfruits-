@@ -3,50 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blox Fruits - Dashboard Statistiques</title>
+  <title>Blox Fruits - Dashboard & Catalogue</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <div class="dashboard-container">
     <header>
-      <h1>🏴‍☠️ Stats Blox Fruits</h1>
-      <p>Tableau de bord de suivi personnel</p>
+      <h1>🏴‍☠️ Blox Fruits Tracker</h1>
+      
+      <nav class="tab-navigation">
+        <button class="tab-btn active" data-tab="tab-dashboard">📊 Dashboard</button>
+        <button class="tab-btn" data-tab="tab-catalog">🍇 Tous les Fruits</button>
+      </nav>
     </header>
 
-    <section class="stats-grid">
+    <main id="tab-dashboard" class="tab-content active">
+      <section class="stats-grid">
+        <div class="card">
+          <div class="card-icon">⚡</div>
+          <div class="card-info">
+            <h3>Niveau</h3>
+            <p id="player-level">2550</p>
+          </div>
+        </div>
+        <div class="card beli">
+          <div class="card-icon">💵</div>
+          <div class="card-info">
+            <h3>Beli</h3>
+            <p id="player-beli">$15,400,000</p>
+          </div>
+        </div>
+        <div class="card fragments">
+          <div class="card-icon">🔮</div>
+          <div class="card-info">
+            <h3>Fragments</h3>
+            <p id="player-fragments">45,000</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="fruits-section">
+        <h2>Équipé / En Possession</h2>
+        <div class="fruits-grid" id="my-fruits-container"></div>
+      </section>
+    </main>
+
+    <main id="tab-catalog" class="tab-content">
+      <h2>Catalogue Complet des Fruits</h2>
+      <p class="subtitle">Liste de tous les fruits disponibles dans le jeu</p>
       
-      <div class="card">
-        <div class="card-icon">⚡</div>
-        <div class="card-info">
-          <h3>Niveau (Level)</h3>
-          <p id="player-level">2550</p>
-        </div>
-      </div>
-
-      <div class="card beli">
-        <div class="card-icon">💵</div>
-        <div class="card-info">
-          <h3>Beli</h3>
-          <p id="player-beli">$15,400,000</p>
-        </div>
-      </div>
-
-      <div class="card fragments">
-        <div class="card-icon">🔮</div>
-        <div class="card-info">
-          <h3>Fragments</h3>
-          <p id="player-fragments">45,000</p>
-        </div>
-      </div>
-
-    </section>
-
-    <section class="fruits-section">
-      <h2>🍇 Fruits Possédés</h2>
-      <div class="fruits-grid" id="fruits-container">
-        </div>
-    </section>
+      <div class="fruits-grid" id="catalog-container"></div>
+    </main>
   </div>
 
   <script src="script.js"></script>
