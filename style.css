@@ -1,151 +1,250 @@
-// 1. Liste globale de tous les fruits avec Rareté & Prix
-const allGameFruits = [
-  { name: "Dragon", rarity: "Mythique", price: "15M $" },
-  { name: "Kitsune", rarity: "Mythique", price: "8M $" },
-  { name: "Control", rarity: "Mythique", price: "9M $" },
-  { name: "Spirit", rarity: "Mythique", price: "3.4M $" },
-  { name: "Venom", rarity: "Mythique", price: "3M $" },
-  { name: "Dough", rarity: "Mythique", price: "2.8M $" },
-  { name: "Mammoth", rarity: "Mythique", price: "2.7M $" },
-  { name: "T-Rex", rarity: "Mythique", price: "2.7M $" },
-  { name: "Blizzard", rarity: "Légendaire", price: "2.4M $" },
-  { name: "Portal", rarity: "Légendaire", price: "1.9M $" },
-  { name: "Phoenix", rarity: "Légendaire", price: "1.8M $" },
-  { name: "Sound", rarity: "Légendaire", price: "1.7M $" },
-  { name: "Buddha", rarity: "Légendaire", price: "1.2M $" },
-  { name: "Magma", rarity: "Rare", price: "960k $" },
-  { name: "Light", rarity: "Rare", price: "650k $" },
-  { name: "Ice", rarity: "Peu commun", price: "350k $" },
-  { name: "Rocket", rarity: "Commun", price: "5k $" }
-];
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Inter, Roboto, sans-serif;
+}
 
-// 2. Vos différents comptes Roblox
-const accountsData = [
-  {
-    accountName: "Compte Principal (Main)",
-    level: 2550,
-    beli: 15400000,
-    fragments: 45000,
-    fruits: [
-      { name: "Kitsune", status: "Équipé", quantity: 1 },
-      { name: "Dragon", status: "Inventaire", quantity: 2 },
-      { name: "Dough", status: "Inventaire", quantity: 3 }
-    ]
-  },
-  {
-    accountName: "Compte Secondaire (Alt 1)",
-    level: 1800,
-    beli: 4200000,
-    fragments: 15000,
-    fruits: [
-      { name: "Buddha", status: "Équipé", quantity: 1 },
-      { name: "Dragon", status: "Inventaire", quantity: 1 },
-      { name: "Portal", status: "Inventaire", quantity: 2 }
-    ]
-  }
-];
+body {
+  background-color: #0b0d14;
+  color: #f8fafc;
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
 
-document.addEventListener("DOMContentLoaded", () => {
-  const selectElement = document.getElementById("account-select");
+.dashboard-container {
+  max-width: 1200px;
+  width: 100%;
+}
 
-  // Remplir le sélecteur de comptes
-  accountsData.forEach((acc, index) => {
-    const opt = document.createElement("option");
-    opt.value = index;
-    opt.textContent = acc.accountName;
-    selectElement.appendChild(opt);
-  });
+header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
 
-  // Afficher les données du compte sélectionné (Dashboard)
-  function loadAccount(index) {
-    const acc = accountsData[index];
-    document.getElementById("player-level").innerText = acc.level.toLocaleString();
-    document.getElementById("player-beli").innerText = "$" + acc.beli.toLocaleString();
-    document.getElementById("player-fragments").innerText = acc.fragments.toLocaleString();
+header h1 {
+  font-size: 2.2rem;
+  color: #38bdf8;
+  margin-bottom: 1rem;
+}
 
-    const totalCount = acc.fruits.reduce((sum, f) => sum + f.quantity, 0);
-    document.getElementById("player-fruit-count").innerText = totalCount;
+/* Onglets de navigation */
+.tab-navigation {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
 
-    const myFruitsContainer = document.getElementById("my-fruits-container");
-    myFruitsContainer.innerHTML = "";
+.tab-btn {
+  background: #141824;
+  color: #94a3b8;
+  border: 1px solid #232a3b;
+  padding: 0.8rem 1.6rem;
+  border-radius: 20px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
 
-    acc.fruits.forEach(f => {
-      const card = document.createElement("div");
-      card.className = "fruit-card";
-      card.innerHTML = `
-        <div class="fruit-card-header">
-          <h4>${f.name}</h4>
-          <span class="stock-count">x${f.quantity}</span>
-        </div>
-        <span class="rarity-badge commun">${f.status}</span>
-      `;
-      myFruitsContainer.appendChild(card);
-    });
-  }
+.tab-btn.active, .tab-btn:hover {
+  background: #38bdf8;
+  color: #0b0d14;
+  border-color: #38bdf8;
+}
 
-  selectElement.addEventListener("change", (e) => loadAccount(e.target.value));
-  loadAccount(0);
+.tab-content { display: none; }
+.tab-content.active { display: block; }
 
-  // Calculer la quantité TOTALE de chaque fruit sur TOUS les comptes réunis
-  function getTotalFruitQuantity(fruitName) {
-    let total = 0;
-    accountsData.forEach(acc => {
-      const found = acc.fruits.find(f => f.name === fruitName);
-      if (found) total += found.quantity;
-    });
-    return total;
-  }
+/* Sélecteur de compte */
+.account-selector-container {
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-weight: bold;
+}
 
-  // Générer le catalogue complet avec filtres
-  const catalogContainer = document.getElementById("catalog-container");
+#account-select {
+  background: #141824;
+  color: #38bdf8;
+  border: 1px solid #232a3b;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+}
 
-  function renderCatalog(filterRarity = "all") {
-    catalogContainer.innerHTML = "";
+/* Cartes de statistiques */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+}
 
-    allGameFruits.forEach(fruit => {
-      if (filterRarity !== "all" && fruit.rarity !== filterRarity) return;
+.card {
+  background: #141824;
+  border-radius: 12px;
+  padding: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border: 1px solid #232a3b;
+}
 
-      const totalOwned = getTotalFruitQuantity(fruit.name);
-      const rarityClass = fruit.rarity.toLowerCase().replace(" ", "-");
+.card-icon { font-size: 2rem; }
+.card-info h3 { font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; }
+.card-info p { font-size: 1.4rem; font-weight: bold; }
+.beli .card-info p { color: #4ade80; }
+.fragments .card-info p { color: #c084fc; }
+.fruits-count .card-info p { color: #f59e0b; }
 
-      const card = document.createElement("div");
-      card.className = "fruit-card";
-      card.innerHTML = `
-        <div class="fruit-card-header">
-          <h4>${fruit.name}</h4>
-          <span class="fruit-price">${fruit.price}</span>
-        </div>
-        <span class="rarity-badge ${rarityClass}">${fruit.rarity}</span>
-        <div class="fruit-stock">
-          <span>Possédé (Tous comptes) :</span>
-          <span class="stock-count">${totalOwned}</span>
-        </div>
-      `;
-      catalogContainer.appendChild(card);
-    });
-  }
+/* BARRE DE FILTRES STYLE WIKI */
+.filter-container {
+  background: #10141e;
+  border: 1px solid #1e2638;
+  border-radius: 16px;
+  padding: 1rem;
+  margin-bottom: 2rem;
+}
 
-  renderCatalog();
+.filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
 
-  // Filtres par Rareté
-  const filterBtns = document.querySelectorAll(".filter-btn");
-  filterBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
-      filterBtns.forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      renderCatalog(btn.getAttribute("data-rarity"));
-    });
-  });
+.filter-btn {
+  background: #181f2e;
+  color: #94a3b8;
+  border: 1px solid #28334a;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+}
 
-  // Navigation Onglets
-  const tabBtns = document.querySelectorAll(".tab-btn");
-  const tabContents = document.querySelectorAll(".tab-content");
-  tabBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
-      tabBtns.forEach(b => b.classList.remove("active"));
-      tabContents.forEach(c => c.classList.remove("active"));
-      btn.classList.add("active");
-      document.getElementById(btn.getAttribute("data-tab")).classList.add("active");
-    });
-  });
-});
+.filter-btn .count-badge {
+  background: #0b0d14;
+  padding: 0.1rem 0.4rem;
+  border-radius: 10px;
+  font-size: 0.75rem;
+}
+
+.filter-btn.active {
+  background: #8b5cf6;
+  color: #fff;
+  border-color: #a78bfa;
+}
+
+/* DESIGN DES CARTES DE FRUITS (IMAGE DU WIKI) */
+.fruits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.2rem;
+}
+
+.wiki-fruit-card {
+  background: #121622;
+  border-radius: 14px;
+  padding: 1.2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  border: 1px solid #1e2638;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.wiki-fruit-card:hover {
+  transform: translateY(-3px);
+}
+
+/* BORDURES & LUEURS NÉON SELON RARETÉ (Exactement comme le Wiki) */
+.wiki-fruit-card.mythique {
+  border-color: #dc2626;
+  box-shadow: 0 0 10px rgba(220, 38, 38, 0.2);
+}
+
+.wiki-fruit-card.légendaire {
+  border-color: #9333ea;
+  box-shadow: 0 0 10px rgba(147, 51, 234, 0.2);
+}
+
+.wiki-fruit-card.rare {
+  border-color: #2563eb;
+  box-shadow: 0 0 10px rgba(37, 99, 235, 0.2);
+}
+
+.wiki-fruit-card.peu-commun {
+  border-color: #16a34a;
+  box-shadow: 0 0 10px rgba(22, 163, 74, 0.2);
+}
+
+.wiki-fruit-card.commun {
+  border-color: #475569;
+}
+
+.fruit-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.fruit-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+/* BADGES RARETÉ STYLISÉS (Style pilule) */
+.rarity-pill {
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.6rem;
+  border-radius: 12px;
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.rarity-pill.mythique { background: rgba(220, 38, 38, 0.2); color: #ef4444; border: 1px solid #dc2626; }
+.rarity-pill.légendaire { background: rgba(147, 51, 234, 0.2); color: #c084fc; border: 1px solid #9333ea; }
+.rarity-pill.rare { background: rgba(37, 99, 235, 0.2); color: #60a5fa; border: 1px solid #2563eb; }
+.rarity-pill.peu-commun { background: rgba(22, 163, 74, 0.2); color: #4ade80; border: 1px solid #16a34a; }
+.rarity-pill.commun { background: rgba(71, 85, 105, 0.2); color: #cbd5e1; border: 1px solid #475569; }
+
+.fruit-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+/* PRIX EN BELI VERT */
+.fruit-price {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #4ade80;
+}
+
+/* COMPTEUR DE QUANTITÉ MULTI-COMPTES */
+.stock-pill {
+  background: #1e2638;
+  color: #38bdf8;
+  border: 1px solid #38bdf8;
+  font-size: 0.8rem;
+  font-weight: bold;
+  padding: 0.2rem 0.6rem;
+  border-radius: 8px;
+}
