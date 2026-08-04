@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blox Fruits - Dashboard Statistiques</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="dashboard-container">
+    <header>
+      <h1>🏴‍☠️ Stats Blox Fruits</h1>
+      <p>Tableau de bord de suivi personnel</p>
+    </header>
+
+    <section class="stats-grid">
+      
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <div class="card-info">
+          <h3>Niveau (Level)</h3>
+          <p id="player-level">2550</p>
+        </div>
+      </div>
+
+      <div class="card beli">
+        <div class="card-icon">💵</div>
+        <div class="card-info">
+          <h3>Beli</h3>
+          <p id="player-beli">$15,400,000</p>
+        </div>
+      </div>
+
+      <div class="card fragments">
+        <div class="card-icon">🔮</div>
+        <div class="card-info">
+          <h3>Fragments</h3>
+          <p id="player-fragments">45,000</p>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="fruits-section">
+      <h2>🍇 Fruits Possédés</h2>
+      <div class="fruits-grid" id="fruits-container">
+        </div>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
