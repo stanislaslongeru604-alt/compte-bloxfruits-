@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blox Fruits - Dashboard & Catalogue</title>
+  <title>Blox Fruits - Multi-Account Tracker</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,48 +11,70 @@
   <div class="dashboard-container">
     <header>
       <h1>🏴‍☠️ Blox Fruits Tracker</h1>
-      
       <nav class="tab-navigation">
-        <button class="tab-btn active" data-tab="tab-dashboard">📊 Dashboard</button>
-        <button class="tab-btn" data-tab="tab-catalog">🍇 Tous les Fruits</button>
+        <button class="tab-btn active" data-tab="tab-dashboard">📊 Mes Comptes</button>
+        <button class="tab-btn" data-tab="tab-catalog">🍇 Tous les Fruits (Global)</button>
       </nav>
     </header>
 
     <main id="tab-dashboard" class="tab-content active">
+      <div class="account-selector-container">
+        <label for="account-select">👤 Sélectionner un compte :</label>
+        <select id="account-select"></select>
+      </div>
+
       <section class="stats-grid">
         <div class="card">
           <div class="card-icon">⚡</div>
           <div class="card-info">
             <h3>Niveau</h3>
-            <p id="player-level">2550</p>
+            <p id="player-level">0</p>
           </div>
         </div>
         <div class="card beli">
           <div class="card-icon">💵</div>
           <div class="card-info">
             <h3>Beli</h3>
-            <p id="player-beli">$15,400,000</p>
+            <p id="player-beli">$0</p>
           </div>
         </div>
         <div class="card fragments">
           <div class="card-icon">🔮</div>
           <div class="card-info">
             <h3>Fragments</h3>
-            <p id="player-fragments">45,000</p>
+            <p id="player-fragments">0</p>
+          </div>
+        </div>
+        <div class="card fruits-count">
+          <div class="card-icon">🧺</div>
+          <div class="card-info">
+            <h3>Fruits (Ce compte)</h3>
+            <p id="player-fruit-count">0</p>
           </div>
         </div>
       </section>
 
       <section class="fruits-section">
-        <h2>Équipé / En Possession</h2>
+        <h2>Inventaire du compte actif</h2>
         <div class="fruits-grid" id="my-fruits-container"></div>
       </section>
     </main>
 
     <main id="tab-catalog" class="tab-content">
-      <h2>Catalogue Complet des Fruits</h2>
-      <p class="subtitle">Liste de tous les fruits disponibles dans le jeu</p>
-      
+      <div class="catalog-header">
+        <h2>Catalogue & Stock Global</h2>
+        <p class="subtitle">Affiche la quantité cumulée de fruits sur **tous** tes comptes confondus.</p>
+      </div>
+
+      <div class="filter-bar">
+        <button class="filter-btn active" data-rarity="all">Toutes</button>
+        <button class="filter-btn mythic" data-rarity="Mythique">Mythique</button>
+        <button class="filter-btn legendary" data-rarity="Légendaire">Légendaire</button>
+        <button class="filter-btn rare" data-rarity="Rare">Rare</button>
+        <button class="filter-btn uncommon" data-rarity="Peu commun">Peu commun</button>
+        <button class="filter-btn common" data-rarity="Commun">Commun</button>
+      </div>
+
       <div class="fruits-grid" id="catalog-container"></div>
     </main>
   </div>
