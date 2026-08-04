@@ -1,206 +1,151 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+// 1. Liste globale de tous les fruits avec Rareté & Prix
+const allGameFruits = [
+  { name: "Dragon", rarity: "Mythique", price: "15M $" },
+  { name: "Kitsune", rarity: "Mythique", price: "8M $" },
+  { name: "Control", rarity: "Mythique", price: "9M $" },
+  { name: "Spirit", rarity: "Mythique", price: "3.4M $" },
+  { name: "Venom", rarity: "Mythique", price: "3M $" },
+  { name: "Dough", rarity: "Mythique", price: "2.8M $" },
+  { name: "Mammoth", rarity: "Mythique", price: "2.7M $" },
+  { name: "T-Rex", rarity: "Mythique", price: "2.7M $" },
+  { name: "Blizzard", rarity: "Légendaire", price: "2.4M $" },
+  { name: "Portal", rarity: "Légendaire", price: "1.9M $" },
+  { name: "Phoenix", rarity: "Légendaire", price: "1.8M $" },
+  { name: "Sound", rarity: "Légendaire", price: "1.7M $" },
+  { name: "Buddha", rarity: "Légendaire", price: "1.2M $" },
+  { name: "Magma", rarity: "Rare", price: "960k $" },
+  { name: "Light", rarity: "Rare", price: "650k $" },
+  { name: "Ice", rarity: "Peu commun", price: "350k $" },
+  { name: "Rocket", rarity: "Commun", price: "5k $" }
+];
 
-body {
-  background-color: #0b0f19;
-  color: #f8fafc;
-  display: flex;
-  justify-content: center;
-  padding: 2rem;
-}
+// 2. Vos différents comptes Roblox
+const accountsData = [
+  {
+    accountName: "Compte Principal (Main)",
+    level: 2550,
+    beli: 15400000,
+    fragments: 45000,
+    fruits: [
+      { name: "Kitsune", status: "Équipé", quantity: 1 },
+      { name: "Dragon", status: "Inventaire", quantity: 2 },
+      { name: "Dough", status: "Inventaire", quantity: 3 }
+    ]
+  },
+  {
+    accountName: "Compte Secondaire (Alt 1)",
+    level: 1800,
+    beli: 4200000,
+    fragments: 15000,
+    fruits: [
+      { name: "Buddha", status: "Équipé", quantity: 1 },
+      { name: "Dragon", status: "Inventaire", quantity: 1 },
+      { name: "Portal", status: "Inventaire", quantity: 2 }
+    ]
+  }
+];
 
-.dashboard-container {
-  max-width: 1100px;
-  width: 100%;
-}
+document.addEventListener("DOMContentLoaded", () => {
+  const selectElement = document.getElementById("account-select");
 
-header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
+  // Remplir le sélecteur de comptes
+  accountsData.forEach((acc, index) => {
+    const opt = document.createElement("option");
+    opt.value = index;
+    opt.textContent = acc.accountName;
+    selectElement.appendChild(opt);
+  });
 
-header h1 {
-  font-size: 2.2rem;
-  color: #38bdf8;
-  margin-bottom: 1rem;
-}
+  // Afficher les données du compte sélectionné (Dashboard)
+  function loadAccount(index) {
+    const acc = accountsData[index];
+    document.getElementById("player-level").innerText = acc.level.toLocaleString();
+    document.getElementById("player-beli").innerText = "$" + acc.beli.toLocaleString();
+    document.getElementById("player-fragments").innerText = acc.fragments.toLocaleString();
 
-/* Onglets */
-.tab-navigation {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-}
+    const totalCount = acc.fruits.reduce((sum, f) => sum + f.quantity, 0);
+    document.getElementById("player-fruit-count").innerText = totalCount;
 
-.tab-btn {
-  background: #1e293b;
-  color: #94a3b8;
-  border: 1px solid #334155;
-  padding: 0.8rem 1.5rem;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
+    const myFruitsContainer = document.getElementById("my-fruits-container");
+    myFruitsContainer.innerHTML = "";
 
-.tab-btn.active, .tab-btn:hover {
-  background: #38bdf8;
-  color: #0f172a;
-}
+    acc.fruits.forEach(f => {
+      const card = document.createElement("div");
+      card.className = "fruit-card";
+      card.innerHTML = `
+        <div class="fruit-card-header">
+          <h4>${f.name}</h4>
+          <span class="stock-count">x${f.quantity}</span>
+        </div>
+        <span class="rarity-badge commun">${f.status}</span>
+      `;
+      myFruitsContainer.appendChild(card);
+    });
+  }
 
-.tab-content { display: none; }
-.tab-content.active { display: block; }
+  selectElement.addEventListener("change", (e) => loadAccount(e.target.value));
+  loadAccount(0);
 
-/* Sélecteur de compte */
-.account-selector-container {
-  margin-bottom: 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  font-weight: bold;
-}
+  // Calculer la quantité TOTALE de chaque fruit sur TOUS les comptes réunis
+  function getTotalFruitQuantity(fruitName) {
+    let total = 0;
+    accountsData.forEach(acc => {
+      const found = acc.fruits.find(f => f.name === fruitName);
+      if (found) total += found.quantity;
+    });
+    return total;
+  }
 
-#account-select {
-  background: #1e293b;
-  color: #38bdf8;
-  border: 1px solid #334155;
-  padding: 0.6rem 1rem;
-  border-radius: 8px;
-  font-size: 1rem;
-  cursor: pointer;
-}
+  // Générer le catalogue complet avec filtres
+  const catalogContainer = document.getElementById("catalog-container");
 
-/* Grille de stats principales */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.2rem;
-  margin-bottom: 2rem;
-}
+  function renderCatalog(filterRarity = "all") {
+    catalogContainer.innerHTML = "";
 
-.card {
-  background: #151d30;
-  border-radius: 12px;
-  padding: 1.2rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  border: 1px solid #222f47;
-}
+    allGameFruits.forEach(fruit => {
+      if (filterRarity !== "all" && fruit.rarity !== filterRarity) return;
 
-.card-icon { font-size: 2rem; }
-.card-info h3 { font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; }
-.card-info p { font-size: 1.4rem; font-weight: bold; }
-.beli .card-info p { color: #4ade80; }
-.fragments .card-info p { color: #c084fc; }
-.fruits-count .card-info p { color: #f59e0b; }
+      const totalOwned = getTotalFruitQuantity(fruit.name);
+      const rarityClass = fruit.rarity.toLowerCase().replace(" ", "-");
 
-/* Filtres par Rareté (Barre style Wiki) */
-.filter-bar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  margin-bottom: 1.5rem;
-  background: #151d30;
-  padding: 0.8rem;
-  border-radius: 10px;
-  border: 1px solid #222f47;
-}
+      const card = document.createElement("div");
+      card.className = "fruit-card";
+      card.innerHTML = `
+        <div class="fruit-card-header">
+          <h4>${fruit.name}</h4>
+          <span class="fruit-price">${fruit.price}</span>
+        </div>
+        <span class="rarity-badge ${rarityClass}">${fruit.rarity}</span>
+        <div class="fruit-stock">
+          <span>Possédé (Tous comptes) :</span>
+          <span class="stock-count">${totalOwned}</span>
+        </div>
+      `;
+      catalogContainer.appendChild(card);
+    });
+  }
 
-.filter-btn {
-  background: #1e293b;
-  color: #94a3b8;
-  border: 1px solid #334155;
-  padding: 0.4rem 0.9rem;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  cursor: pointer;
-}
+  renderCatalog();
 
-.filter-btn.active {
-  background: #38bdf8;
-  color: #0f172a;
-  font-weight: bold;
-}
+  // Filtres par Rareté
+  const filterBtns = document.querySelectorAll(".filter-btn");
+  filterBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      filterBtns.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      renderCatalog(btn.getAttribute("data-rarity"));
+    });
+  });
 
-/* Style des cartes de Fruits */
-.fruits-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1.2rem;
-}
-
-.fruit-card {
-  background: #151d30;
-  border: 1px solid #222f47;
-  border-radius: 10px;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  position: relative;
-  transition: transform 0.2s;
-}
-
-.fruit-card:hover {
-  transform: translateY(-3px);
-}
-
-.fruit-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
-}
-
-.fruit-card h4 {
-  font-size: 1.1rem;
-  color: #fff;
-}
-
-.fruit-price {
-  font-size: 0.85rem;
-  color: #4ade80;
-  font-weight: bold;
-}
-
-/* Badges de Rareté */
-.rarity-badge {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  font-weight: bold;
-  width: fit-content;
-}
-
-.rarity-badge.mythique { background: #7f1d1d; color: #f87171; border: 1px solid #ef4444; }
-.rarity-badge.légendaire { background: #581c87; color: #c084fc; border: 1px solid #a855f7; }
-.rarity-badge.rare { background: #1e3a8a; color: #60a5fa; border: 1px solid #3b82f6; }
-.rarity-badge.peu-commun { background: #14532d; color: #4ade80; border: 1px solid #22c55e; }
-.rarity-badge.commun { background: #334155; color: #cbd5e1; border: 1px solid #64748b; }
-
-/* Compteur de quantité globale */
-.fruit-stock {
-  margin-top: 0.8rem;
-  font-size: 0.9rem;
-  color: #94a3b8;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-top: 1px solid #222f47;
-  padding-top: 0.5rem;
-}
-
-.stock-count {
-  background: #38bdf8;
-  color: #0f172a;
-  padding: 0.1rem 0.5rem;
-  border-radius: 12px;
-  font-weight: bold;
-}
+  // Navigation Onglets
+  const tabBtns = document.querySelectorAll(".tab-btn");
+  const tabContents = document.querySelectorAll(".tab-content");
+  tabBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      tabBtns.forEach(b => b.classList.remove("active"));
+      tabContents.forEach(c => c.classList.remove("active"));
+      btn.classList.add("active");
+      document.getElementById(btn.getAttribute("data-tab")).classList.add("active");
+    });
+  });
+});
